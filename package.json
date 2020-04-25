@@ -1,19 +1,8 @@
 {
-  "name": "new-app",
+  "name": "domotic-one",
   "version": "1.0.0",
-  "description": "New application schema",
+  "description": "",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {
-    "@stryker-mutator/core": "^2.4.0",
-    "@stryker-mutator/javascript-mutator": "^2.4.0",
-    "@stryker-mutator/mocha-framework": "^2.4.0",
-    "@stryker-mutator/mocha-runner": "^2.4.0",
-    "chai": "^4.2.0",
-    "cucumber": "^5.1.0",
-    "mocha": "^6.2.2",
-    "release-it": "^12.4.3"
-  },
   "scripts": {
     "release": "release-it",
     "test": "npm run test-mocha && npm run test-cucumber",
@@ -21,28 +10,25 @@
     "test-domain": "mocha domain --recursive",
     "test-doubles": "mocha test-doubles --recursive",
     "test-adapters": "mocha adapters --recursive",
-    "test-integration": "mocha test-integration --recursive",
+    "test-integration": "mocha test-integration --recursive --timeout 10000",
     "test-mutation": "npx stryker run",
     "test-cucumber": "cucumber-js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/unsegnor/new-app.git"
-  },
-  "keywords": [
-    "New",
-    "app",
-    "test",
-    "BDD",
-    "gherkins",
-    "cucumber",
-    "CI",
-    "travis"
-  ],
   "author": "Víctor Calatayud Asensio",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/unsegnor/new-app/issues"
+  "license": "ISC",
+  "dependencies": {
+    "node-xiaomi-smart-home": "^1.5.0",
+    "tuyapi": "^3.2.3"
   },
-  "homepage": "https://github.com/unsegnor/new-app#readme"
+  "devDependencies": {
+    "sinon": "^9.0.2",
+    "chai": "^4.2.0",
+    "@stryker-mutator/core": "^2.4.0",
+    "@stryker-mutator/javascript-mutator": "^2.4.0",
+    "@stryker-mutator/mocha-framework": "^2.4.0",
+    "@stryker-mutator/mocha-runner": "^2.4.0",
+    "cucumber": "^5.1.0",
+    "mocha": "^6.2.2",
+    "release-it": "^12.4.3"
+  }
 }
