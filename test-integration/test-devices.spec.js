@@ -2,10 +2,11 @@ const {assert} = require('chai')
 const TuyaFactory = require('../adapters/TuyaAdapters/TuyaFactory');
 const XiaomiFactory = require('../adapters/XiaomiAdapters/XiaomiFactory');
 const DeviceRepository = require('../interface/DeviceRepository');
+const devicesData = require('../interface/DevicesData')
 
 const tuyaFactory = TuyaFactory();
 const xiaomiFactory = XiaomiFactory();
-const deviceRepository = DeviceRepository({tuyaFactory, xiaomiFactory});
+const deviceRepository = DeviceRepository({tuyaFactory, xiaomiFactory, devicesData});
 
 describe('Testing devices', function(){
     it('luz-salon is registered', async function(){
