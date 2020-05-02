@@ -12,7 +12,7 @@ module.exports = function({deviceInfo}){
 
     function onClick(fn){
         hub.on('data.button', function (sid, type, battery) {
-            Console.log("Button "+sid+" clicked with "+type )
+            console.log("Button "+sid+" clicked with "+type )
             // type can be click, double_click, long_click_press, long_click_release
             if (sid === deviceInfo.id && type == hub.clickTypes.click)
             {
