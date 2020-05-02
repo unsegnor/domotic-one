@@ -17,6 +17,7 @@
   "author": "Víctor Calatayud Asensio",
   "license": "ISC",
   "dependencies": {
+    "local-devices": "^3.0.0",
     "node-xiaomi-smart-home": "^1.5.0",
     "tuyapi": "^3.2.3"
   },
