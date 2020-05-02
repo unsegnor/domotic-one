@@ -6,7 +6,8 @@ module.exports = function({deviceInfo}){
     hub.listen();
 
     return Object.freeze({
-        onClick
+        onClick,
+        disconnect
     })
 
     function onClick(fn){
@@ -17,5 +18,9 @@ module.exports = function({deviceInfo}){
                 fn()
             }
         });
+    }
+
+    async function disconnect(){
+        await hub.stop()
     }
 }

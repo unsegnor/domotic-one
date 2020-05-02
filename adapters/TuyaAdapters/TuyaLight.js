@@ -22,7 +22,8 @@ module.exports = function({deviceInfo}){
         setLuminosity,
         turnOn,
         turnOff,
-        getRawStatus
+        getRawStatus,
+        disconnect
     })
 
     async function isOn(){
@@ -56,5 +57,9 @@ module.exports = function({deviceInfo}){
 
     async function turnOff(){
         await tuyaDevice.set({dps: IS_TURNED_ON_PROPERTY, set: false})
+    }
+
+    async function disconnect(){
+        await tuyaDevice.disconnect()
     }
 }
