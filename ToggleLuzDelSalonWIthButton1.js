@@ -7,7 +7,7 @@ const IpSolver = require('./interface/ipSolver');
 
 const tuyaFactory = TuyaFactory();
 const xiaomiFactory = XiaomiFactory();
-const ipSolver = IpSolver();
+const ipSolver = IpSolver({ipRange: '192.168.0.1-192.168.0.254'});
 const deviceRepository = DeviceRepository({tuyaFactory, xiaomiFactory, devicesData, ipSolver});
 
 async function main(){

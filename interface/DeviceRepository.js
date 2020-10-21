@@ -7,11 +7,19 @@ module.exports = function({tuyaFactory, xiaomiFactory, devicesData, ipSolver}){
         var deviceInfo = devicesData[deviceName]
 
         if(deviceInfo.name){
-            console.log("Looking for ip for " + deviceInfo.name)
+            console.log(`Looking for ip for device name: ${deviceInfo.name}`)
             var ip = await ipSolver.getIpFromName(deviceInfo.name)
+
+            if(!ip){
+                console.log(`Looking for ip for device mac: ${deviceInfo.mac}`)
+                ip = await ipSolver.getIpFromMacAddress(deviceInfo.mac)
+            }
+            
             if(ip){
                 console.log("Found ip: "+ip)
                 deviceInfo.ip = ip
+            }else{
+                console.log(`Ip not found for ${deviceInfo.name}`)
             }
         }
         
