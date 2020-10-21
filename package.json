@@ -17,19 +17,19 @@
   "author": "Víctor Calatayud Asensio",
   "license": "ISC",
   "dependencies": {
-    "local-devices": "^3.0.0",
+    "local-devices": "^3.1.0",
     "node-xiaomi-smart-home": "^1.5.0",
     "tuyapi": "^3.2.3"
   },
   "devDependencies": {
-    "sinon": "^9.0.2",
+    "@stryker-mutator/core": "^2.5.0",
+    "@stryker-mutator/javascript-mutator": "^2.5.0",
+    "@stryker-mutator/mocha-framework": "^2.5.0",
+    "@stryker-mutator/mocha-runner": "^2.5.0",
     "chai": "^4.2.0",
-    "@stryker-mutator/core": "^2.4.0",
-    "@stryker-mutator/javascript-mutator": "^2.4.0",
-    "@stryker-mutator/mocha-framework": "^2.4.0",
-    "@stryker-mutator/mocha-runner": "^2.4.0",
     "cucumber": "^5.1.0",
-    "mocha": "^6.2.2",
-    "release-it": "^12.4.3"
+    "mocha": "^6.2.3",
+    "release-it": "^12.6.3",
+    "sinon": "^9.2.0"
   }
 }
