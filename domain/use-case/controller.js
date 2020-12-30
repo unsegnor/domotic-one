@@ -18,42 +18,52 @@ module.exports = function(){
     }
 
     async function evaluate(status){
-        var targetViolations = await getTargetViolations(status)
-        var {actionsForViolations, warnings} = await getActionsForViolations(targetViolations)
+        var evaluation = await evaluateTargets(status)
+        var actions = await getActionsForViolations(evaluation.violations)
         var actionNames = []
-        for( var actionIndex in actionsForViolations){
-            var action = actionsForViolations[actionIndex]
+        for( var actionIndex in actions.actionsForViolations){
+            var action = actions.actionsForViolations[actionIndex]
             actionNames.push({
                 name: action.name
             })
         }
         return {
             actions: actionNames,
+            warnings: [...evaluation.warnings, ...actions.warnings]
+        }
+    }
+
+    async function evaluateTargets(status){
+        var targetViolations = []
+        var warnings = []
+
+        for(var targetIndex in targets){
+            var target = targets[targetIndex]
+            var propertyInformed = false
+            for(var observationIndex in status.observations){
+                var observation = status.observations[observationIndex]
+                if(target.property == observation.property){
+                    propertyInformed = true
+                    if(await isTargetViolated(target, observation)){
+                        targetViolations.push({
+                            target,
+                            observation
+                        })
+                    }
+                }
+            }
+            if (!propertyInformed) warnings.push(`Missing the value for the property "${target.property}".`)
+        }
+        return {
+            violations: targetViolations,
             warnings
         }
     }
 
-    async function getTargetViolations(status){
-        var targetViolations = []
-        for(var observationIndex in status.observations){
-            var observation = status.observations[observationIndex]
-            for(var targetIndex in targets){
-                var target = targets[targetIndex]
-                if(await isTargetViolated(target, observation)){
-                    targetViolations.push({
-                        target,
-                        observation
-                    })
-                }
-            }
-        }
-        return targetViolations
-    }
-
     async function isTargetViolated(target, observation){
-        if(target.property != observation.property) return false
         if(observation.value > target.maxValue) return true
         if(observation.value < target.minValue) return true
+        return false
     }
 
     async function getActionsForViolations(targetViolations){

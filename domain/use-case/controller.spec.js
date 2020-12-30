@@ -128,17 +128,32 @@ describe.only('Controller', function(){
         await then_there_must_be_a_warning('Property "size" (80) is over the target (20) and there is no available action to reduce it.')
     })
 
-    xit('must not activate the dehumidifier if it makes a lot of noise while sleeping', async function(){
-        given_the_target({
+    var noInformationAvailableCases = ['size', 'otherProperty']
+    noInformationAvailableCases.forEach(function(property){
+        it(`must return warning message when there is no information available for a defined property "${property}"`, async function(){
+            await given_the_target({
+                property,
+                maxValue: '20'
+            })
+            
+            await when_evaluating_the_status({
+                temperature: '25',
+                humidity:'50'
+            })
+    
+            await then_there_must_be_a_warning(`Missing the value for the property "${property}".`)
+            await then_there_must_be_no_actions()
+        })
+    })
+
+    it('must not activate the dehumidifier if it makes a lot of noise while sleeping', async function(){
+        await given_the_target({
             property: 'noise',
             maxValue: '30',
-            condition:
-                {
-                    or: [
-                        { property:'hour', maxValue: '10' },
-                        { property:'hour', minValue: '20' }
-                    ]
-                }
+            condition: {or:[
+                {property: 'hour', lessThan:'10'},
+                {property: 'hour', greaterThan:'20'}
+            ]}
         })
 
         await when_evaluating_the_status({
@@ -148,6 +163,25 @@ describe.only('Controller', function(){
         })
 
         await then_there_must_be_no_actions()
+    })
+
+    it('must activate the dehumidifier if we are not in sleeping time', async function(){
+        await given_the_target({
+            property: 'noise',
+            maxValue: '30',
+            condition: {or:[
+                {property: 'hour', lessThan:'10'},
+                {property: 'hour', greaterThan:'20'}
+            ]}
+        })
+
+        await when_evaluating_the_status({
+            temperature: '25',
+            humidity:'70',
+            hour: '17'
+        })
+
+        await then_there_must_be_an_action('activate-dehumidifier')
     })
 
     async function then_there_must_be_no_actions(){
