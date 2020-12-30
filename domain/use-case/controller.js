@@ -21,8 +21,7 @@ module.exports = function(){
         var evaluation = await evaluateTargets(status)
         var actions = await getActionsForViolations(evaluation.violations)
         var actionNames = []
-        for( var actionIndex in actions.actionsForViolations){
-            var action = actions.actionsForViolations[actionIndex]
+        for( var action of actions.actionsForViolations){
             actionNames.push({
                 name: action.name
             })
@@ -37,11 +36,9 @@ module.exports = function(){
         var targetViolations = []
         var warnings = []
 
-        for(var targetIndex in targets){
-            var target = targets[targetIndex]
+        for(var target of targets){
             var propertyInformed = false
-            for(var observationIndex in status.observations){
-                var observation = status.observations[observationIndex]
+            for(var observation of status.observations){
                 if(target.property == observation.property){
                     propertyInformed = true
                     if(await isTargetViolated(target, observation)){
@@ -69,9 +66,7 @@ module.exports = function(){
     async function getActionsForViolations(targetViolations){
         var actionsForViolations = []
         var warnings = []
-        for(var violationIndex in targetViolations){
-            var {target, observation} = targetViolations[violationIndex]
-
+        for(var {target, observation} of targetViolations){
             if(observation.value > target.maxValue){
                 var actionsToReduce = await getActionsToReduce(target.property)
                 if(actionsToReduce.length == 0) warnings.push(`Property "${target.property}" (${observation.value}) is over the target (${target.maxValue}) and there is no available action to reduce it.`)
@@ -96,10 +91,8 @@ module.exports = function(){
 
     async function getActionsWithResultFor(result, property){
         var actionsToReduce = []
-        for(var actionIndex in actions){
-            var action = actions[actionIndex]
-            for(var consequenceIndex in action.estimated_consequences){
-                var consequence = action.estimated_consequences[consequenceIndex]
+        for(var action of actions){
+            for(var consequence of action.estimated_consequences){
                 if(consequence.property == property && consequence.result == result)
                     actionsToReduce.push(action)
             }
