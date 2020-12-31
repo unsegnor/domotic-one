@@ -22,7 +22,7 @@ describe.only('Controller', function(){
         await controller.setAction({
             name: 'activate-dehumidifier',
             estimated_consequences: [
-                { property: 'humidity', result: 'reduced' },
+                { property: 'humidity', result: 'reduced', minimum:'0', maximum:'1' },
                 { property: 'noise', result: 'increased', upTo:'55'}
                 //,{ property: 'temperature', result: 'increased'}
             ]
@@ -31,7 +31,7 @@ describe.only('Controller', function(){
         await controller.setAction({
             name: 'activate-heater',
             estimated_consequences: [
-                { property: 'temperature', result: 'increased' },
+                { property: 'temperature', result: 'increased', minimum:'0', maximum:'1' },
                 { property: 'noise', result: 'increased', upTo:'25'}
                 //,{ property: 'humidity', result: 'reduced'}
             ]
@@ -40,8 +40,8 @@ describe.only('Controller', function(){
         await controller.setAction({
             name: 'activate-humidifier',
             estimated_consequences: [
-                { property: 'humidity', result: 'increased' },
-                { property: 'temperature', result: 'reduced' },
+                { property: 'humidity', result: 'increased', minimum:'0', maximum:'1' },
+                { property: 'temperature', result: 'reduced', minimum:'0', maximum:'1' },
                 { property: 'noise', result: 'increased', upTo:'30'}
             ]
         })
@@ -182,6 +182,25 @@ describe.only('Controller', function(){
         })
 
         await then_there_must_be_an_action('activate-dehumidifier')
+    })
+
+    it('must activate the heater if we are in sleeping time as its noise is below the maxValue', async function(){
+        await given_the_target({
+            property: 'noise',
+            maxValue: '30',
+            condition: {or:[
+                {property: 'hour', lessThan:'10'},
+                {property: 'hour', greaterThan:'20'}
+            ]}
+        })
+
+        await when_evaluating_the_status({
+            temperature: '10',
+            humidity:'50',
+            hour: '5'
+        })
+
+        await then_there_must_be_an_action('activate-heater')
     })
 
     async function then_there_must_be_no_actions(){
