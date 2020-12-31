@@ -1,7 +1,7 @@
 const {expect} = require('chai')
 const Controller = require('./controller')
 
-describe.only('Controller', function(){
+describe('Controller', function(){
     let controller, result
 
     beforeEach(async function(){
@@ -95,7 +95,7 @@ describe.only('Controller', function(){
             temperature: '25',
             humidity:'50'
         })
-        await then_there_must_be_no_actions()        
+        await then_there_must_be_no_actions()
     })
 
     it('must return warning message when there are no available actions to increase a property to the target', async function(){
@@ -113,6 +113,28 @@ describe.only('Controller', function(){
         await then_there_must_be_a_warning('Property "color" (0) is below the target (100) and there is no available action to increase it.')
     })
 
+    it('must not return warning messages when there are available actions to increase a property to the target', async function(){
+        await given_the_target({
+            property: 'color',
+            minValue: '100'
+        })
+
+        await controller.setAction({
+            name: 'activate-color-increaser',
+            estimated_consequences: [
+                {property: 'color', result: 'increased'}
+            ]
+        })
+        
+        await when_evaluating_the_status({
+            temperature: '25',
+            humidity:'50',
+            color: '0'
+        })
+
+        await then_there_must_be_no_warnings()
+    })
+
     it('must return warning message when there are no available actions to decrease a property to the target', async function(){
         await given_the_target({
             property: 'size',
@@ -126,6 +148,28 @@ describe.only('Controller', function(){
         })
 
         await then_there_must_be_a_warning('Property "size" (80) is over the target (20) and there is no available action to reduce it.')
+    })
+
+    it('must return no warning message when there are available actions to decrease a property to the target', async function(){
+        await given_the_target({
+            property: 'size',
+            maxValue: '20'
+        })
+
+        await controller.setAction({
+            name: 'activate-size-reducer',
+            estimated_consequences: [
+                {property: 'size', result: 'reduced'}
+            ]
+        })
+        
+        await when_evaluating_the_status({
+            temperature: '25',
+            humidity:'50',
+            size: '80'
+        })
+
+        await then_there_must_be_no_warnings()
     })
 
     var noInformationAvailableCases = ['size', 'otherProperty']
@@ -215,6 +259,12 @@ describe.only('Controller', function(){
     async function then_there_must_be_a_warning(message){
         expect(result.warnings.length).to.equal(1)
         expect(result.warnings[0]).to.equal(message)
+    }
+
+    async function then_there_must_be_no_warnings(){
+        if(result.warnings.length > 0){
+            throw `Expected no warnings but found: ${result.warnings}`
+        }
     }
 
     async function when_evaluating_the_status(status){

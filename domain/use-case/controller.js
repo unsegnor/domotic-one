@@ -64,10 +64,11 @@ module.exports = function(){
         for(var consequence of action.estimated_consequences){
             switch(consequence.result){
                 case 'increased':
-                    if(consequence.upTo) await setStatus(nextStatus, consequence.property, consequence.upTo)
+                    //if(consequence.upTo)
+                    await setStatus(nextStatus, consequence.property, consequence.upTo)
                     break
-                case 'reduced':
-                    break
+                // case 'reduced':
+                //     break
             }
         }
         return nextStatus
