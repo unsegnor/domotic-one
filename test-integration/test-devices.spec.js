@@ -7,32 +7,34 @@ const IpSolver = require('../interface/ipSolver');
 
 const tuyaFactory = TuyaFactory();
 const xiaomiFactory = XiaomiFactory();
-const ipSolver = IpSolver();
+const ipSolver = IpSolver({ipRange: '192.168.1.1-192.168.1.254'});
 const deviceRepository = DeviceRepository({tuyaFactory, xiaomiFactory, devicesData, ipSolver});
 
 describe('Testing devices', function(){
-    it('luz-salon is registered', async function(){
-        var light = await deviceRepository.getDevice('luz-salón')
-        assert.isDefined(light)
-        light.disconnect()
-    })
 
-    it('luz-salon is responding', async function(){
-        var light = await deviceRepository.getDevice('luz-salón')
-        var isOn = await light.isOn()
-        assert.isDefined(isOn)
-        light.disconnect()
-    })
+    var devices = []
 
-    it('button1 is registered', async function(){
-        var button1 = await deviceRepository.getDevice('button1')
-        assert.isDefined(button1)
-        button1.disconnect()
-    })
+    for(var deviceId in devicesData){
+        devices.push({
+            id: deviceId,
+            deviceInfo: devicesData[deviceId]
+        })
+    }
 
-    it('button1 is responding', async function(){
-        var button1 = await deviceRepository.getDevice('button1')
-        assert.isDefined(button1)
-        button1.disconnect()
+    devices.forEach(function(device){
+        it(`device ${device.id} must be reachable`, async function(){
+            var loadedDevice = await deviceRepository.getDevice(device.id)
+            if(loadedDevice.connect) await loadedDevice.connect()
+            assert.isDefined(loadedDevice)
+            if(loadedDevice.disconnect) await loadedDevice.disconnect()
+        })
+
+        it(`device state for ${device.id} must be retrievable`, async function(){
+            var loadedDevice = await deviceRepository.getDevice(device.id)
+            var state
+            if(loadedDevice.getState) state = await loadedDevice.getState()
+            console.log(state)
+            if(loadedDevice.disconnect) await loadedDevice.disconnect()
+        })
     })
 })

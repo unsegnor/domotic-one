@@ -1,5 +1,6 @@
 const MovementSensor = require('./MovementSensor')
 const Button = require('./Button')
+const TemperatureAndHumidity = require('./TemperatureAndHumidity')
 
 module.exports = function(){
     return Object.freeze({
@@ -12,6 +13,8 @@ module.exports = function(){
                 return Button({deviceInfo})
             case 'movement':
                 return MovementSensor({deviceInfo})
+            case 'temperatureandhumidity':
+                return TemperatureAndHumidity({deviceInfo})
         }
     }
 }
