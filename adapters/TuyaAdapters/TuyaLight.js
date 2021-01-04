@@ -23,6 +23,7 @@ module.exports = function({deviceInfo}){
         turnOn,
         turnOff,
         getRawStatus,
+        getState: getRawStatus,
         disconnect
     })
 
