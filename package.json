@@ -28,8 +28,8 @@
     "@stryker-mutator/mocha-runner": "^2.5.0",
     "chai": "^4.2.0",
     "cucumber": "^5.1.0",
-    "mocha": "^6.2.3",
-    "release-it": "^12.6.3",
+    "mocha": "^10.2.0",
+    "release-it": "^15.6.0",
     "sinon": "^9.2.0"
   }
 }
